@@ -212,6 +212,24 @@ describe('wsdl-tests', function() {
         done();
       });
     });
+
+    it('should handle default namespaces correctly', function(done) {
+      openWSDL(path.resolve(__dirname, 'wsdl/defaultNSSimple.wsdl'), function(
+        err,
+        def
+      ) {
+        var operation = def.definitions.bindings.SoapBinding.operations.Retrieve;
+        var operationDesc = operation.describe(def);
+        assert(operationDesc.input.body.elements[0].elements);
+
+        operationDesc.input.body.elements[0].elements.forEach(function(element){
+          assert.equal(element.isSimple, true, element.qname.name + " does not have isSimple==true");
+          assert(element.type, element.qname.name + " does not have a type");
+        });
+
+        done();
+      });
+    });
   });
 });
 

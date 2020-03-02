@@ -1,0 +1,53 @@
+<definitions targetNamespace="http://example.com/wsdl/myAPI" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://example.com/wsdl/myAPI">
+  <types>
+    <schema elementFormDefault="qualified" targetNamespace="http://example.com/wsdl/myAPI" version="1.0" xmlns="http://www.w3.org/2001/XMLSchema">
+      <element name="RetrieveRequestMsg">
+        <complexType>
+          <sequence>
+            <element name="StringXsd" type="xsd:string" minOccurs="1" maxOccurs="1" />
+            <element name="StringDefault" type="string" minOccurs="1" maxOccurs="1" />
+          </sequence>
+        </complexType>
+      </element>
+      <element name="RetrieveResponseMsg">
+        <complexType>
+          <sequence>
+            <element name="OverallStatus" type="xsd:string" minOccurs="1" maxOccurs="1" />
+            <element name="RequestID" type="xsd:string" minOccurs="0" maxOccurs="1" />
+          </sequence>
+        </complexType>
+      </element>
+    </schema>
+  </types>
+  <message name="retrieveRequest">
+    <part element="tns:RetrieveRequestMsg" name="parameters" />
+  </message>
+  <message name="retrieveResponse">
+    <part element="tns:RetrieveResponseMsg" name="parameters" />
+  </message>
+  <portType name="Soap">
+    <operation name="Retrieve">
+      <documentation>Retrieve objects</documentation>
+      <input message="tns:retrieveRequest" />
+      <output message="tns:retrieveResponse" />
+    </operation>
+  </portType>
+  <binding name="SoapBinding" type="tns:Soap">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="Retrieve">
+      <soap:operation soapAction="Retrieve" />
+      <input>
+        <soap:body parts="parameters" use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="MyAPI">
+    <documentation>My API</documentation>
+    <port binding="tns:SoapBinding" name="Soap">
+      <soap:address location="https://example.com/Service.asmx" />
+    </port>
+  </service>
+</definitions>
